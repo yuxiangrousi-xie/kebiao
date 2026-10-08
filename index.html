@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2f5597">
+<meta name="description" content="2026—2027学年秋季学期课表（学期通用课表）">
+<title>2026—2027学年秋季学期课表</title>
+<style>
+:root{
+  --ink:#1f2d3d; --ink2:#55647a; --ink3:#8b97a6;
+  --line:#dce2ea; --line2:#eef2f7;
+  --head:#2f5597; --head2:#6b4fa8;
+  --bg:#f2f5fa; --card:#ffffff;
+  --r:10px;
+  --shadow:0 1px 2px rgba(31,45,61,.05), 0 10px 30px rgba(31,45,61,.07);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.55;
+  font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Source Han Sans SC",system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--head);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1260px;margin:0 auto;padding:0 18px 60px}
+
+/* 页头 */
+.topbar{height:6px;background:linear-gradient(90deg,var(--head),var(--head2))}
+.page{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px;
+  padding:26px 0 18px}
+.page h1{margin:0;font-size:26px;letter-spacing:.5px;color:#16233a}
+.tag{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:999px;background:#e8eefb;
+  color:var(--head);font-size:12px;letter-spacing:.4px}
+.page .meta{font-size:12.5px;color:var(--ink2);text-align:right}
+.page .meta b{color:var(--ink);font-size:14px}
+.dl{display:inline-block;margin-top:8px;padding:7px 14px;border:1px solid var(--line);border-radius:8px;
+  background:#fff;font-size:12.5px;box-shadow:0 1px 2px rgba(31,45,61,.05)}
+.dl:hover{border-color:#b9c8e4;text-decoration:none}
+
+/* 卡片 */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px 20px}
+.card + .card{margin-top:22px}
+.card h2{margin:0 0 4px;font-size:16px;color:#16233a}
+.card .hint{margin:0 0 14px;font-size:12.5px;color:var(--ink3)}
+
+/* 课表网格 */
+.scroll{overflow-x:auto;padding-bottom:4px}
+.tt{display:grid;gap:4px;min-width:960px;
+  grid-template-columns:52px 52px 104px repeat(5,minmax(132px,1fr))}
+.tt > div{border-radius:7px;min-width:0}
+.hd{background:var(--head);color:#fff;font-weight:700;font-size:13.5px;display:flex;
+  align-items:center;justify-content:center;height:40px;letter-spacing:1px}
+.hd.day{letter-spacing:2px}
+.sect{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;
+  color:#44546a;writing-mode:vertical-rl;letter-spacing:4px;padding:6px 0}
+.sect.s0{background:#eff4fa}.sect.s1{background:#fbf5ec}.sect.s2{background:#f3f0fa}
+.per{background:#f4f7fb;color:#33475b;font-weight:700;font-size:15px;
+  display:flex;align-items:center;justify-content:center}
+.tim{background:#fafbfd;color:#6b7a8c;font-size:11px;display:flex;align-items:center;
+  justify-content:center;text-align:center;padding:2px}
+.slot{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:6px 8px;overflow:hidden}
+.empty{background:#fff;color:#cbd2db;font-size:12px;border:1px solid var(--line2)}
+.empty.week{background:#f5f6f8;color:#c9cfd8}
+.course{background:var(--f);color:var(--t);border-left:4px solid var(--a);cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease}
+.course:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(31,45,61,.13)}
+.course .nm{font-weight:700;font-size:13.5px;line-height:1.35}
+.course .mt{margin-top:3px;font-size:11.5px;color:#5c6b7a;line-height:1.3}
+.course.flash{outline:2px solid var(--a);outline-offset:-2px}
+
+/* 手机端按天视图 */
+.days{display:none}
+.dcard{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:14px;background:#fff}
+.dcard h3{margin:0;padding:10px 14px;background:#f4f7fb;border-bottom:1px solid var(--line);
+  font-size:14px;color:#33475b;letter-spacing:2px}
+.dcard ul{list-style:none;margin:0;padding:12px;display:grid;gap:10px}
+.dcard li{background:var(--f);border-left:4px solid var(--a);border-radius:8px;padding:10px 12px}
+.dcard .when{display:block;font-size:11.5px;color:#6b7a8c}
+.dcard .nm{display:block;font-weight:700;font-size:14px;color:var(--t);margin-top:2px}
+.dcard .mt{display:block;font-size:12px;color:#5c6b7a}
+.dcard .none{padding:14px;color:var(--ink3);font-size:13px}
+
+/* 课程一览 */
+.search{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.search input{flex:1 1 240px;min-width:0;padding:9px 12px;border:1px solid var(--line);border-radius:8px;
+  font-size:13px;font-family:inherit;color:var(--ink);background:#fbfcfe}
+.search input:focus{outline:none;border-color:#9db2d4;background:#fff}
+.search span{font-size:12.5px;color:var(--ink3)}
+table.list{width:100%;border-collapse:collapse;font-size:13px}
+table.list th{background:var(--head);color:#fff;font-weight:700;font-size:12.5px;padding:10px 12px;
+  text-align:left;white-space:nowrap}
+table.list th:first-child{border-radius:8px 0 0 0}
+table.list th:last-child{border-radius:0 8px 0 0}
+table.list td{padding:10px 12px;border-bottom:1px solid var(--line2);color:#44546a;vertical-align:middle}
+table.list tr:nth-child(even) td{background:#f8fafd}
+table.list tr.hit td{background:#fff8e6}
+table.list td.num{color:var(--ink3);text-align:center;width:52px}
+table.list td.weeks{text-align:center;font-weight:700;color:#33475b;width:72px}
+table.list td.name{font-weight:700}
+.chip{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--a);margin-right:8px}
+.note{margin:14px 0 0;font-size:12.5px;color:var(--ink3);line-height:1.7}
+footer.foot{margin-top:28px;text-align:center;font-size:12px;color:var(--ink3)}
+
+@media (max-width:900px){
+  .tt{display:none}
+  .days{display:block}
+  .page h1{font-size:21px}
+  .page .meta{text-align:left}
+  table.list td.hide-sm,table.list th.hide-sm{display:none}
+}
+@media print{
+  body{background:#fff}
+  .topbar,.search,.dl{display:none}
+  .card{box-shadow:none;padding:0}
+  .tt{min-width:0}
+  .course:hover{transform:none;box-shadow:none}
+  .days{display:block}
+  .dcard{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="topbar"></div>
+<div class="wrap">
+  <header class="page">
+    <div>
+      <h1>2026—2027学年秋季学期课表</h1>
+      <span class="tag">学期通用课表 · 不含具体日期</span>
+    </div>
+    <div class="meta">
+      <div><b>15</b> 门课程 · 每周 <b>37</b> 节 · 约 <b>27.8</b> 学时</div>
+      <a class="dl" href="大一上学期课表_美化版.xlsx">下载 Excel 版本</a>
+    </div>
+  </header>
+
+  <section class="card">
+    <h2>周课表</h2>
+    <p class="hint">点击任意课程可在下方课程一览中定位</p>
+    <div class="scroll"><div class="tt" role="table" aria-label="周课表">
+<div class="hd" style="grid-column:1;grid-row:1">时段</div>
+<div class="hd" style="grid-column:2;grid-row:1">节次</div>
+<div class="hd" style="grid-column:3;grid-row:1">时间</div>
+<div class="hd day" style="grid-column:4;grid-row:1">周一</div>
+<div class="hd day" style="grid-column:5;grid-row:1">周二</div>
+<div class="hd day" style="grid-column:6;grid-row:1">周三</div>
+<div class="hd day" style="grid-column:7;grid-row:1">周四</div>
+<div class="hd day" style="grid-column:8;grid-row:1">周五</div>
+<div class="sect s0" style="grid-column:1;grid-row:2/7">上午</div>
+<div class="sect s1" style="grid-column:1;grid-row:7/11">下午</div>
+<div class="sect s2" style="grid-column:1;grid-row:11/14">晚上</div>
+<div class="per" style="grid-column:2;grid-row:2">1</div>
+<div class="tim" style="grid-column:3;grid-row:2">8:00-8:45</div>
+<div class="per" style="grid-column:2;grid-row:3">2</div>
+<div class="tim" style="grid-column:3;grid-row:3">8:50-9:35</div>
+<div class="per" style="grid-column:2;grid-row:4">3</div>
+<div class="tim" style="grid-column:3;grid-row:4">9:50-10:35</div>
+<div class="per" style="grid-column:2;grid-row:5">4</div>
+<div class="tim" style="grid-column:3;grid-row:5">10:40-11:25</div>
+<div class="per" style="grid-column:2;grid-row:6">5</div>
+<div class="tim" style="grid-column:3;grid-row:6">11:30-12:15</div>
+<div class="per" style="grid-column:2;grid-row:7">6</div>
+<div class="tim" style="grid-column:3;grid-row:7">14:00-14:45</div>
+<div class="per" style="grid-column:2;grid-row:8">7</div>
+<div class="tim" style="grid-column:3;grid-row:8">14:50-15:35</div>
+<div class="per" style="grid-column:2;grid-row:9">8</div>
+<div class="tim" style="grid-column:3;grid-row:9">15:50-16:35</div>
+<div class="per" style="grid-column:2;grid-row:10">9</div>
+<div class="tim" style="grid-column:3;grid-row:10">16:40-17:25</div>
+<div class="per" style="grid-column:2;grid-row:11">10</div>
+<div class="tim" style="grid-column:3;grid-row:11">19:00-19:45</div>
+<div class="per" style="grid-column:2;grid-row:12">11</div>
+<div class="tim" style="grid-column:3;grid-row:12">19:50-20:35</div>
+<div class="per" style="grid-column:2;grid-row:13">12</div>
+<div class="tim" style="grid-column:3;grid-row:13">20:40-21:25</div>
+<div class="slot empty" style="grid-column:4;grid-row:2">—</div>
+<div class="slot empty" style="grid-column:4;grid-row:3">—</div>
+<div class="slot course" data-course="体育Ⅰ" style="grid-column:4;grid-row:4/6;--f:#ECEAF8;--a:#5643AD;--t:#30265E" title="周一 第3节 · 3-4节 9:50-11:25"><span class="nm">体育Ⅰ</span><span class="mt">白茂强</span></div>
+<div class="slot empty" style="grid-column:4;grid-row:6">—</div>
+<div class="slot course" data-course="人工智能通识" style="grid-column:4;grid-row:7/9;--f:#F3F8EA;--a:#89AD43;--t:#4B5E26" title="周一 第6节 · 6-7节 14:00-15:35"><span class="nm">人工智能通识</span><span class="mt">朱一亨 · 教学楼C101</span></div>
+<div class="slot course" data-course="大学生安全教育" style="grid-column:4;grid-row:9/11;--f:#EAF8ED;--a:#43AD5A;--t:#265E33" title="周一 第8节 · 8-9节 15:50-17:25"><span class="nm">大学生安全教育</span><span class="mt">叶文雪 · 教学楼B209</span></div>
+<div class="slot empty" style="grid-column:4;grid-row:11">—</div>
+<div class="slot empty" style="grid-column:4;grid-row:12">—</div>
+<div class="slot empty" style="grid-column:4;grid-row:13">—</div>
+<div class="slot empty" style="grid-column:5;grid-row:2">—</div>
+<div class="slot empty" style="grid-column:5;grid-row:3">—</div>
+<div class="slot course" data-course="高等数学" style="grid-column:5;grid-row:4/7;--f:#EBF8EA;--a:#4FAD43;--t:#2D5E26" title="周二 第3节 · 3-5节 9:50-12:15"><span class="nm">高等数学</span><span class="mt">尚蕾 · C403</span></div>
+<div class="slot course" data-course="中国文化概论" style="grid-column:5;grid-row:7/9;--f:#EAEFF8;--a:#436AAD;--t:#263B5E" title="周二 第6节 · 6-7节 14:00-15:35"><span class="nm">中国文化概论</span><span class="mt">夏如兵 · 主楼201</span></div>
+<div class="slot course" data-course="中国历史文献学" style="grid-column:5;grid-row:9/11;--f:#F1EAF8;--a:#7943AD;--t:#43265E" title="周二 第8节 · 8-9节 15:50-17:25"><span class="nm">中国历史文献学</span><span class="mt">吴昊 · 主楼304</span></div>
+<div class="slot empty" style="grid-column:5;grid-row:11">—</div>
+<div class="slot empty" style="grid-column:5;grid-row:12">—</div>
+<div class="slot empty" style="grid-column:5;grid-row:13">—</div>
+<div class="slot course" data-course="中国古代史（上）" style="grid-column:6;grid-row:2/4;--f:#EAF4F8;--a:#438DAD;--t:#264D5E" title="周三 第1节 · 1-2节 8:00-9:35"><span class="nm">中国古代史（上）</span><span class="mt">刘馨秋 · B206</span></div>
+<div class="slot course" data-course="进阶英语读写Ⅰ" style="grid-column:6;grid-row:4/7;--f:#F8F0EA;--a:#AD7443;--t:#5E4026" title="周三 第3节 · 3-5节 9:50-12:15"><span class="nm">进阶英语读写Ⅰ</span><span class="mt">张萍 · B405</span></div>
+<div class="slot empty" style="grid-column:6;grid-row:7">—</div>
+<div class="slot empty" style="grid-column:6;grid-row:8">—</div>
+<div class="slot empty" style="grid-column:6;grid-row:9">—</div>
+<div class="slot empty" style="grid-column:6;grid-row:10">—</div>
+<div class="slot empty" style="grid-column:6;grid-row:11">—</div>
+<div class="slot empty" style="grid-column:6;grid-row:12">—</div>
+<div class="slot empty" style="grid-column:6;grid-row:13">—</div>
+<div class="slot course" data-course="学科导论" style="grid-column:7;grid-row:2/4;--f:#F8EAF0;--a:#AD436E;--t:#5E263D" title="周四 第1节 · 1-2节 8:00-9:35"><span class="nm">学科导论</span><span class="mt">夏如兵 · 主楼230</span></div>
+<div class="slot course" data-course="世界古代史" style="grid-column:7;grid-row:4/6;--f:#EAF8F5;--a:#43AD93;--t:#265E51" title="周四 第3节 · 3-4节 9:50-11:25"><span class="nm">世界古代史</span><span class="mt">沈志忠 · B-204</span></div>
+<div class="slot empty" style="grid-column:7;grid-row:6">—</div>
+<div class="slot empty" style="grid-column:7;grid-row:7">—</div>
+<div class="slot empty" style="grid-column:7;grid-row:8">—</div>
+<div class="slot course" data-course="大学生心理健康教育" style="grid-column:7;grid-row:9/11;--f:#F8F5EA;--a:#AD9743;--t:#5E5326" title="周四 第8节 · 8-9节 15:50-17:25"><span class="nm">大学生心理健康教育</span><span class="mt">王世伟 · 主楼107</span></div>
+<div class="slot course" data-course="跨文化交流" style="grid-column:7;grid-row:11/14;--f:#EAF7F8;--a:#43A3AD;--t:#26595E" title="周四 第10节 · 10-12节 19:00-21:25"><span class="nm">跨文化交流</span><span class="mt">钱叶萍 · 主楼134</span></div>
+<div class="slot course" data-course="高等数学" style="grid-column:8;grid-row:2/4;--f:#EBF8EA;--a:#4FAD43;--t:#2D5E26" title="周五 第1节 · 1-2节 8:00-9:35"><span class="nm">高等数学</span><span class="mt">尚蕾 · C303</span></div>
+<div class="slot course" data-course="思想道德与法治" style="grid-column:8;grid-row:4/7;--f:#F8EAF8;--a:#AD43A7;--t:#5E265B" title="周五 第3节 · 3-5节 9:50-12:15"><span class="nm">思想道德与法治</span><span class="mt">乔佳 · A206</span></div>
+<div class="slot course" data-course="史学理论与方法" style="grid-column:8;grid-row:7/9;--f:#F8EAEB;--a:#AD434B;--t:#5E262B" title="周五 第6节 · 6-7节 14:00-15:35"><span class="nm">史学理论与方法</span><span class="mt">刘爽 · B125</span></div>
+<div class="slot empty" style="grid-column:8;grid-row:9">—</div>
+<div class="slot empty" style="grid-column:8;grid-row:10">—</div>
+<div class="slot course" data-course="中文写作" style="grid-column:8;grid-row:11/14;--f:#F8EAF3;--a:#AD4384;--t:#5E2649" title="周五 第10节 · 10-12节 19:00-21:25"><span class="nm">中文写作</span><span class="mt">薛慧 · 主楼115</span></div>
+</div></div>
+    <div class="days">
+<article class="dcard"><h3>周一</h3>
+<ul><li style="--f:#ECEAF8;--a:#5643AD;--t:#30265E"><span class="when">第3-4节 · 9:50-11:25</span><span class="nm">体育Ⅰ</span><span class="mt">白茂强</span></li><li style="--f:#F3F8EA;--a:#89AD43;--t:#4B5E26"><span class="when">第6-7节 · 14:00-15:35</span><span class="nm">人工智能通识</span><span class="mt">朱一亨 · 教学楼C101</span></li><li style="--f:#EAF8ED;--a:#43AD5A;--t:#265E33"><span class="when">第8-9节 · 15:50-17:25</span><span class="nm">大学生安全教育</span><span class="mt">叶文雪 · 教学楼B209</span></li></ul>
+</article>
+<article class="dcard"><h3>周二</h3>
+<ul><li style="--f:#EBF8EA;--a:#4FAD43;--t:#2D5E26"><span class="when">第3-5节 · 9:50-12:15</span><span class="nm">高等数学</span><span class="mt">尚蕾 · C403</span></li><li style="--f:#EAEFF8;--a:#436AAD;--t:#263B5E"><span class="when">第6-7节 · 14:00-15:35</span><span class="nm">中国文化概论</span><span class="mt">夏如兵 · 主楼201</span></li><li style="--f:#F1EAF8;--a:#7943AD;--t:#43265E"><span class="when">第8-9节 · 15:50-17:25</span><span class="nm">中国历史文献学</span><span class="mt">吴昊 · 主楼304</span></li></ul>
+</article>
+<article class="dcard"><h3>周三</h3>
+<ul><li style="--f:#EAF4F8;--a:#438DAD;--t:#264D5E"><span class="when">第1-2节 · 8:00-9:35</span><span class="nm">中国古代史（上）</span><span class="mt">刘馨秋 · B206</span></li><li style="--f:#F8F0EA;--a:#AD7443;--t:#5E4026"><span class="when">第3-5节 · 9:50-12:15</span><span class="nm">进阶英语读写Ⅰ</span><span class="mt">张萍 · B405</span></li></ul>
+</article>
+<article class="dcard"><h3>周四</h3>
+<ul><li style="--f:#F8EAF0;--a:#AD436E;--t:#5E263D"><span class="when">第1-2节 · 8:00-9:35</span><span class="nm">学科导论</span><span class="mt">夏如兵 · 主楼230</span></li><li style="--f:#EAF8F5;--a:#43AD93;--t:#265E51"><span class="when">第3-4节 · 9:50-11:25</span><span class="nm">世界古代史</span><span class="mt">沈志忠 · B-204</span></li><li style="--f:#F8F5EA;--a:#AD9743;--t:#5E5326"><span class="when">第8-9节 · 15:50-17:25</span><span class="nm">大学生心理健康教育</span><span class="mt">王世伟 · 主楼107</span></li><li style="--f:#EAF7F8;--a:#43A3AD;--t:#26595E"><span class="when">第10-12节 · 19:00-21:25</span><span class="nm">跨文化交流</span><span class="mt">钱叶萍 · 主楼134</span></li></ul>
+</article>
+<article class="dcard"><h3>周五</h3>
+<ul><li style="--f:#EBF8EA;--a:#4FAD43;--t:#2D5E26"><span class="when">第1-2节 · 8:00-9:35</span><span class="nm">高等数学</span><span class="mt">尚蕾 · C303</span></li><li style="--f:#F8EAF8;--a:#AD43A7;--t:#5E265B"><span class="when">第3-5节 · 9:50-12:15</span><span class="nm">思想道德与法治</span><span class="mt">乔佳 · A206</span></li><li style="--f:#F8EAEB;--a:#AD434B;--t:#5E262B"><span class="when">第6-7节 · 14:00-15:35</span><span class="nm">史学理论与方法</span><span class="mt">刘爽 · B125</span></li><li style="--f:#F8EAF3;--a:#AD4384;--t:#5E2649"><span class="when">第10-12节 · 19:00-21:25</span><span class="nm">中文写作</span><span class="mt">薛慧 · 主楼115</span></li></ul>
+</article>
+</div>
+  </section>
+
+  <section class="card">
+    <h2>课程一览</h2>
+    <div class="search">
+      <input id="q" type="search" placeholder="搜索课程、教师或地点" aria-label="搜索课程">
+      <span id="hit">共 15 门</span>
+    </div>
+    <div class="scroll">
+    <table class="list">
+      <thead><tr><th>序号</th><th>课程名称</th><th>任课教师</th><th>上课地点</th>
+      <th class="hide-sm">上课安排</th><th>周节数</th></tr></thead>
+      <tbody>
+<tr data-course="中国古代史（上）" data-key="中国古代史（上） 刘馨秋 b206 周三 第1-2节"><td class="num">1</td><td class="name" style="color:#264D5E"><span class="chip" style="--a:#438DAD"></span>中国古代史（上）</td><td>刘馨秋</td><td>B206</td><td class="hide-sm">周三 第1-2节</td><td class="weeks">2</td></tr>
+<tr data-course="学科导论" data-key="学科导论 夏如兵 主楼230 周四 第1-2节"><td class="num">2</td><td class="name" style="color:#5E263D"><span class="chip" style="--a:#AD436E"></span>学科导论</td><td>夏如兵</td><td>主楼230</td><td class="hide-sm">周四 第1-2节</td><td class="weeks">2</td></tr>
+<tr data-course="高等数学" data-key="高等数学 尚蕾 c403 / c303 周二 第3-5节；周五 第1-2节"><td class="num">3</td><td class="name" style="color:#2D5E26"><span class="chip" style="--a:#4FAD43"></span>高等数学</td><td>尚蕾</td><td>C403 / C303</td><td class="hide-sm">周二 第3-5节；周五 第1-2节</td><td class="weeks">5</td></tr>
+<tr data-course="体育Ⅰ" data-key="体育ⅰ 白茂强 — 周一 第3-4节"><td class="num">4</td><td class="name" style="color:#30265E"><span class="chip" style="--a:#5643AD"></span>体育Ⅰ</td><td>白茂强</td><td>—</td><td class="hide-sm">周一 第3-4节</td><td class="weeks">2</td></tr>
+<tr data-course="进阶英语读写Ⅰ" data-key="进阶英语读写ⅰ 张萍 b405 周三 第3-5节"><td class="num">5</td><td class="name" style="color:#5E4026"><span class="chip" style="--a:#AD7443"></span>进阶英语读写Ⅰ</td><td>张萍</td><td>B405</td><td class="hide-sm">周三 第3-5节</td><td class="weeks">3</td></tr>
+<tr data-course="世界古代史" data-key="世界古代史 沈志忠 b-204 周四 第3-4节"><td class="num">6</td><td class="name" style="color:#265E51"><span class="chip" style="--a:#43AD93"></span>世界古代史</td><td>沈志忠</td><td>B-204</td><td class="hide-sm">周四 第3-4节</td><td class="weeks">2</td></tr>
+<tr data-course="思想道德与法治" data-key="思想道德与法治 乔佳 a206 周五 第3-5节"><td class="num">7</td><td class="name" style="color:#5E265B"><span class="chip" style="--a:#AD43A7"></span>思想道德与法治</td><td>乔佳</td><td>A206</td><td class="hide-sm">周五 第3-5节</td><td class="weeks">3</td></tr>
+<tr data-course="人工智能通识" data-key="人工智能通识 朱一亨 教学楼c101 周一 第6-7节"><td class="num">8</td><td class="name" style="color:#4B5E26"><span class="chip" style="--a:#89AD43"></span>人工智能通识</td><td>朱一亨</td><td>教学楼C101</td><td class="hide-sm">周一 第6-7节</td><td class="weeks">2</td></tr>
+<tr data-course="中国文化概论" data-key="中国文化概论 夏如兵 主楼201 周二 第6-7节"><td class="num">9</td><td class="name" style="color:#263B5E"><span class="chip" style="--a:#436AAD"></span>中国文化概论</td><td>夏如兵</td><td>主楼201</td><td class="hide-sm">周二 第6-7节</td><td class="weeks">2</td></tr>
+<tr data-course="史学理论与方法" data-key="史学理论与方法 刘爽 b125 周五 第6-7节"><td class="num">10</td><td class="name" style="color:#5E262B"><span class="chip" style="--a:#AD434B"></span>史学理论与方法</td><td>刘爽</td><td>B125</td><td class="hide-sm">周五 第6-7节</td><td class="weeks">2</td></tr>
+<tr data-course="大学生安全教育" data-key="大学生安全教育 叶文雪 教学楼b209 周一 第8-9节"><td class="num">11</td><td class="name" style="color:#265E33"><span class="chip" style="--a:#43AD5A"></span>大学生安全教育</td><td>叶文雪</td><td>教学楼B209</td><td class="hide-sm">周一 第8-9节</td><td class="weeks">2</td></tr>
+<tr data-course="中国历史文献学" data-key="中国历史文献学 吴昊 主楼304 周二 第8-9节"><td class="num">12</td><td class="name" style="color:#43265E"><span class="chip" style="--a:#7943AD"></span>中国历史文献学</td><td>吴昊</td><td>主楼304</td><td class="hide-sm">周二 第8-9节</td><td class="weeks">2</td></tr>
+<tr data-course="大学生心理健康教育" data-key="大学生心理健康教育 王世伟 主楼107 周四 第8-9节"><td class="num">13</td><td class="name" style="color:#5E5326"><span class="chip" style="--a:#AD9743"></span>大学生心理健康教育</td><td>王世伟</td><td>主楼107</td><td class="hide-sm">周四 第8-9节</td><td class="weeks">2</td></tr>
+<tr data-course="跨文化交流" data-key="跨文化交流 钱叶萍 主楼134 周四 第10-12节"><td class="num">14</td><td class="name" style="color:#26595E"><span class="chip" style="--a:#43A3AD"></span>跨文化交流</td><td>钱叶萍</td><td>主楼134</td><td class="hide-sm">周四 第10-12节</td><td class="weeks">3</td></tr>
+<tr data-course="中文写作" data-key="中文写作 薛慧 主楼115 周五 第10-12节"><td class="num">15</td><td class="name" style="color:#5E2649"><span class="chip" style="--a:#AD4384"></span>中文写作</td><td>薛慧</td><td>主楼115</td><td class="hide-sm">周五 第10-12节</td><td class="weeks">3</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="note">说明：每节 45 分钟，每周 37 节约 27.8 学时。周六、周日无课安排，故未显示。“—”表示原表未提供上课地点。</p>
+  </section>
+
+  <footer class="foot">数据与《大一上学期课表_美化版.xlsx》一致 · 由课表自动生成</footer>
+</div>
+<script>
+(function () {
+  var box = document.getElementById('q');
+  var rows = Array.prototype.slice.call(document.querySelectorAll('table.list tbody tr'));
+  var count = document.getElementById('hit');
+  if (box) {
+    box.addEventListener('input', function () {
+      var k = box.value.trim().toLowerCase(), n = 0;
+      rows.forEach(function (tr) {
+        var ok = !k || tr.getAttribute('data-key').indexOf(k) > -1;
+        tr.style.display = ok ? '' : 'none';
+        if (ok) { n++; }
+      });
+      if (count) { count.textContent = '匹配 ' + n + ' 门'; }
+    });
+  }
+  function flash(name) {
+    rows.forEach(function (tr) {
+      if (tr.getAttribute('data-course') !== name) { return; }
+      tr.classList.add('hit');
+      tr.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      setTimeout(function () { tr.classList.remove('hit'); }, 1800);
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-course].course'), function (el) {
+    el.addEventListener('click', function () { flash(el.getAttribute('data-course')); });
+  });
+})();
+</script>
+</body>
+</html>
